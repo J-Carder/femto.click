@@ -1,0 +1,35 @@
+URL Shortener App:
+- = required
+/ = void
++ = bonus
+
+Requirements:
+- must encode URL non sequentially with 5+ characters, eg. https://test.com/test -> FVhdf
+/ must not include bad words while encoding, ie. curse words
+- must not be vulnerable to injection attacks
+- must be easily reproducible, ie. easy to go back and forth between short and long URL
+- must handle collisions
+- must not be able to guess URL ie. NOT sequential 0, 1, 2
++ allow user to choose ID 
++ track number of clicks
+
+
+Ideas:
+- convert auto incremneted ID to base62, ie. 0000000001 -> DOeiqMc1K
+- also add salt so can't be easily guessed
+
+implement checksum so can't go thru all ID's, ie. f(checksum(id) % 62^2) + f(id) = urlID
+
+maybe allow users to choose a URL ID ex. -> Tester -> 1587812623630
+
+instead of dynamoDB store URLs in S3 and redirect? see: https://aws.amazon.com/blogs/compute/build-a-serverless-private-url-shortener/
+
+- EDIT probably better to use DynamoDB and redirect (lower cost)
+
+
+Implementation:
+API Gateway endpoints:
+- POST /app/shorten - convert from long URL to short URL
+- GET /app/stats?url=test - count # of clicks on url "test"
+- GET /{shortID}- convert from short URL to long URL
+make sure {shortID} CANNOT be "app"
